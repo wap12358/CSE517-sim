@@ -1,12 +1,17 @@
 from sorted_doubly_linked_list import SortedDoublyLinkedList
+from rand import RandomNumberGenerator
 
+TIMESTAMP_PER_SECOND = 1e9  # Nanosecond Timestamp
 
 # Example usage:
+rng = RandomNumberGenerator()
+rate = 150000 / TIMESTAMP_PER_SECOND
+
 dll = SortedDoublyLinkedList()
-dll.insert("Element 0", 5)
-dll.insert("Element 1", 3)
-dll.insert("Element 2", 7)
-dll.insert("Element 3", 4)
+
+# Generate 10 random numbers from an exponential distribution
+for i in range(10):
+    dll.insert(f"Element {i}", rng.exponential(rate))
 
 dll.display()
 
