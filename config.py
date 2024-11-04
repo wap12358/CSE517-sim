@@ -1,0 +1,1 @@
+TIMESTAMP_PER_SECOND = 1e6  # Nanosecond Timestamp

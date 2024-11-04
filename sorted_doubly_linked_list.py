@@ -17,6 +17,9 @@ class SortedDoublyLinkedList:
     def __init__(self):
         self.head = None
         self.tail = None
+    
+    def is_empty(self):
+        return self.head == None and self.tail == None
 
     def insert(self, event, timestamp):
         """
@@ -69,7 +72,7 @@ class SortedDoublyLinkedList:
             self.head = self.head.next
             self.head.prev = None
 
-        return smallest_node.event
+        return smallest_node.event, smallest_node.timestamp
 
     def display(self):
         """
@@ -78,6 +81,6 @@ class SortedDoublyLinkedList:
         elements = []
         current = self.head
         while current:
-            elements.append((current.event, current.timestamp))
+            elements.append((str(current.event), current.timestamp))
             current = current.next
         print("List:", elements)

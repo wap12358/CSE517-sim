@@ -1,6 +1,8 @@
 import random
 import math
 
+from config import *
+
 class RandomNumberGenerator:
     """
     A random number generator class for generating numbers based on various distributions.
@@ -9,7 +11,7 @@ class RandomNumberGenerator:
     def __init__(self):
         self.last_error = 0.0  # Error term to compensate for rounding bias in integer conversion
     
-    def round_off(self, float_value):
+    def round_off(self, float_value: float) -> int:
         """
         Rounds a floating-point value to the nearest integer with error compensation.
         """
@@ -19,7 +21,7 @@ class RandomNumberGenerator:
         self.last_error = compensated_value - integer_value  # Update error for next time
         return integer_value
 
-    def exponential(self, rate):
+    def exponential(self, rate: int | float) -> int:
         """
         Generates an integer based on an exponential distribution with the given rate parameter.
         Applies error compensation to ensure the rounding process does not skew the mean.
@@ -28,7 +30,7 @@ class RandomNumberGenerator:
         u = random.uniform(0, 1)
         
         # Convert uniform random number to an exponential distribution
-        exact_value = -math.log(1 - u) / rate
+        exact_value = -math.log(1 - u) / (rate / TIMESTAMP_PER_SECOND)
 
         return self.round_off(exact_value)
 
