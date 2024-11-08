@@ -2,16 +2,17 @@ from config import *
 from sorted_doubly_linked_list import SortedDoublyLinkedList
 from rand import RandomNumberGenerator
 from device import Job, Device, End
+from numpy import mean
 
 rng = RandomNumberGenerator()
 
-def test(arrival_rate, service_rate, nr_jobs: int):
+def test(arrival_rate, service_rate, nr_jobs: int, rand_dist: str):
     events = SortedDoublyLinkedList()
 
-    source = Device('Arrive', arrival_rate)
-    device1 = Device('Device 1', service_rate)
-    device2 = Device('Device 2', service_rate)
-    end = End('Complete', 0)
+    source = Device('Arrive', arrival_rate, rand_dist)
+    device1 = Device('Device 1', service_rate, rand_dist)
+    device2 = Device('Device 2', service_rate, rand_dist)
+    end = End('Complete', 0, rand_dist)
 
     source.connect(device1)
     device1.connect(device2)
@@ -33,14 +34,18 @@ def test(arrival_rate, service_rate, nr_jobs: int):
     #     print(item)
     return ret
 
-nr_jobs: int = int(1e5)
+nr_jobs: int = int(1e4)
 arrival_rate = int(1e4)
-with open('result.csv', 'w') as f:
-    pass
-for service_rate in range(1000, 100000, 1000):
-    result = test(arrival_rate, service_rate, nr_jobs)
-    print(sum(result)/nr_jobs)
-    with open('result.csv', 'a') as f:
-        f.write(f"{arrival_rate},{service_rate},")
-        f.write(','.join(str(x) for x in result))
-        f.write('\n')
+for test_case in ['exponential', 'uniform', 'deterministic']:
+    with open(f'{test_case}.csv', 'w') as f:
+        pass
+    for service_rate in range(2000, 30000, 2000):
+        result = []
+        for i in range(100):
+            tmp = test(arrival_rate, service_rate, nr_jobs, test_case)
+            # print(sum(result)/nr_jobs)
+            result.append(mean(tmp))
+        with open(f'{test_case}.csv', 'a') as f:
+            f.write(f"{arrival_rate},{service_rate},")
+            f.write(','.join(str(x) for x in result))
+            f.write('\n')

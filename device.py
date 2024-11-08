@@ -12,13 +12,22 @@ class Job:
         return f"id={self.id}, Arr: {self.history[0]}, last op: {self.history[-1]}"
 
 class Device:
-    def __init__(self, name: str, service_rate: int | float):
+    def __init__(self, name: str, service_rate: int | float, rand_dist: str):
         self.name = name
         self.service_rate = service_rate
         self.queue = []
         self.connected_devices = []
         self.rng = RandomNumberGenerator()
         self.busy_until = 0
+        if rand_dist == 'exponential':
+            self.rand = self.rng.exponential
+        elif rand_dist == 'uniform':
+            self.rand = self.rng.uniform
+        elif rand_dist == 'deterministic':
+            self.rand = self.rng.deterministic
+        else:
+            print(f'Wrong rand_dist value: {rand_dist}')
+            exit(-1)
     
     def connect(self, device):
         self.connected_devices.append(device)
@@ -33,7 +42,7 @@ class Device:
         # print(f"{self.name}\t{current_ts}\t{len(self.queue)}")
 
         job: Job = self.dequeue()
-        service_time = self.rng.exponential(self.service_rate)
+        service_time = self.rand(self.service_rate)
         next_operation_ts = current_ts + service_time
         self.busy_until = job.busy_until = next_operation_ts
         next_device: Device = self.select_next_device(job)

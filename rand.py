@@ -34,6 +34,24 @@ class RandomNumberGenerator:
 
         return self.round_off(exact_value)
 
+    def uniform(self, rate: int | float) -> int:
+        """
+        Generates an integer based on a uniform distribution with the given rate parameter.
+        Applies error compensation to ensure the rounding process does not skew the mean.
+        """
+        # Generate a uniform random number between 0 and TIMESTAMP_PER_SECOND
+        u = random.uniform(0, 2 * TIMESTAMP_PER_SECOND / rate)
+
+        return self.round_off(u)
+
+    def deterministic(self, rate: int | float) -> int:
+        """
+        Generates an integer based on a deterministic value with the given rate parameter.
+        Applies error compensation to ensure the rounding process does not skew the mean.
+        """
+
+        return self.round_off(TIMESTAMP_PER_SECOND / rate)
+
     def reset_error(self):
         """
         Resets the error term, useful if starting a new sequence or distribution.
