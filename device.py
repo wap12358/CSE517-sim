@@ -72,4 +72,5 @@ class End(Device):
             item.history.append(tuple((complete_ts, 0, self.name)))
             item.sojourn_time = complete_ts - arrive_ts
             sojourn_times.append(item.sojourn_time)
-        return sojourn_times
+        duration = self.queue[-1].history[-1][0]
+        return duration, sojourn_times

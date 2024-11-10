@@ -3,6 +3,7 @@ from sorted_doubly_linked_list import SortedDoublyLinkedList
 from rand import RandomNumberGenerator
 from device import Job, Device, End
 from numpy import mean
+from tqdm import tqdm
 
 rng = RandomNumberGenerator()
 
@@ -39,13 +40,17 @@ arrival_rate = int(1e4)
 for test_case in ['exponential', 'uniform', 'deterministic']:
     with open(f'{test_case}.csv', 'w') as f:
         pass
-    for service_rate in range(2000, 30000, 2000):
-        result = []
+    for service_rate in tqdm(range(2000, 30000, 2000)):
+        avg_sojourn = []
+        avg_nr_item = []
         for i in range(100):
-            tmp = test(arrival_rate, service_rate, nr_jobs, test_case)
+            duration, sojourn_times = test(arrival_rate, service_rate, nr_jobs, test_case)
             # print(sum(result)/nr_jobs)
-            result.append(mean(tmp))
+            avg_sojourn.append(mean(sojourn_times))
+            avg_nr_item.append(sum(sojourn_times)/duration)
         with open(f'{test_case}.csv', 'a') as f:
             f.write(f"{arrival_rate},{service_rate},")
-            f.write(','.join(str(x) for x in result))
+            f.write(','.join(str(x) for x in avg_sojourn))
+            f.write(',')
+            f.write(','.join(str(x) for x in avg_nr_item))
             f.write('\n')
